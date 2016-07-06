@@ -307,14 +307,17 @@ void get_circle_dir( int8_t f, int8_t d, int8_t a, int8_t b , int8_t & xd, int8_
 
 void dda_circle( long micro_delay , long xc, long yc, int8_t dir )
 {
-  //Serial.print( current_steps.x );  Serial.print("  " );
-  //Serial.print( current_steps.y );  Serial.print("  " );
-  //Serial.print( xc );  Serial.print("  " );
-  //Serial.print( yc );  Serial.println("  " );
-  //Serial.print( target_steps.x );  Serial.print("  " );
-  //Serial.print( target_steps.y );  Serial.print("  " );
-  //Serial.print( dir );  Serial.println("  " );
 
+  if( DEBUG == 1) {
+    Serial.println("Circle Start... ");
+    Serial.print( current_steps.x );  Serial.print("  " );
+    Serial.print( current_steps.y );  Serial.print("  " );
+    Serial.print( xc );  Serial.print("  " );
+    Serial.print( yc );  Serial.println("  " );
+    Serial.print( target_steps.x );  Serial.print("  " );
+    Serial.print( target_steps.y );  Serial.print("  " );
+    Serial.print( dir );  Serial.println("  " );
+  }
   dir ^= 1;
 
   //init stuff
@@ -343,9 +346,10 @@ void dda_circle( long micro_delay , long xc, long yc, int8_t dir )
     x_direction = xd >= 0;
     y_direction = yd >= 0;
 
-    //Serial.print( current_steps.x );  Serial.print( "  " );  Serial.print( xd );  Serial.print( "  " );
-    //Serial.print( current_steps.y );  Serial.print( "  " );  Serial.println( yd );
-
+    if (DEBUG == 1) {
+      Serial.print( current_steps.x );  Serial.print( "  " );  Serial.print(target_steps.x) ; Serial.print("  "); Serial.print( xd );  Serial.print( "  " );
+      Serial.print( current_steps.y );  Serial.print( "  " );  Serial.print(target_steps.y) ; Serial.print("  "); Serial.println( yd );
+    }
     if( xd != 0 ) {
       digiWrite( XDIR_PORT, XDIR_MASK , x_direction^1 );
       digiWrite( XSTEP_PORT, XSTEP_MASK, true );
@@ -375,9 +379,17 @@ void dda_circle( long micro_delay , long xc, long yc, int8_t dir )
   } while( (current_steps.x != target_steps.x && current_steps.y != target_steps.y) ||
           abs(current_steps.x - target_steps.x) > 10 || abs(current_steps.y - target_steps.y) > 10 );
 
+//} while (current_steps.x != target_steps.x && current_steps.y != target_steps.y);
 
+ if(DEBUG==1) {
+  Serial.println("Escaped the circle loop...");
+ }
+ 
   // only one of these loops will actually run...
   if( current_steps.x != target_steps.x ) {
+    if (DEBUG == 1){
+       Serial.println("stepping X");
+    }
     if( current_steps.x > target_steps.x )
       xd = -1;
     else
@@ -400,6 +412,9 @@ void dda_circle( long micro_delay , long xc, long yc, int8_t dir )
   }
 
   if( current_steps.y != target_steps.y ) {
+    if (DEBUG == 1){
+       Serial.println("stepping Y");
+    }
     if( current_steps.y > target_steps.y )
       yd = -1;
     else

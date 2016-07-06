@@ -7,11 +7,18 @@
 // define the parameters of our machine.
 float X_STEPS_PER_INCH = 48;
 // original = 40
-float X_STEPS_PER_MM = 43.75;
+//float X_STEPS_PER_MM = 43.75;
+float X_STEPS_PER_MM = 43.93;
 int X_MOTOR_STEPS   = 100;
 
 float Y_STEPS_PER_INCH = 48;
-float Y_STEPS_PER_MM  = 44.1;
+//float Y_STEPS_PER_MM  = 44.1;
+float Y_STEPS_PER_MM  = 43.93;
+
+// JCW - so if you change the steps per MM and steps per IN so taht they are not the same
+// you cause the circle routine to break because the ABS values in the test could fail because the value is more than 10 off
+// I suspect but haven't tested that you can just change the values to be slightly larger and it starts to work...
+
 int Y_MOTOR_STEPS   = 100;
 
 float Z_STEPS_PER_INCH = 48;
@@ -19,14 +26,14 @@ float Z_STEPS_PER_MM   = 40;
 int Z_MOTOR_STEPS    = 100;
 
 //our maximum feedrates  
-int FAST_XY_FEEDRATE = 7000;
-int FAST_Z_FEEDRATE = 7000;
+int FAST_XY_FEEDRATE = 3000;
+int FAST_Z_FEEDRATE = 3000;
 
 // Set to one if sensor outputs inverting (ie: 1 means open, 0 means closed)
 // RepRap opto endstops are *not* inverting.
 int SENSORS_INVERTING = 1;
 
-int DEBUG = 0;
+int DEBUG=0;
 int PEN = 1;  // Laser, set PEN=0
 
 MeDCMotor laser(M2);
@@ -77,7 +84,7 @@ int Z_ENABLE_SERVO = 0;
 int Z_ENABLE_LASER = 1;
 
 
-#define COMMAND_SIZE 128
+#define COMMAND_SIZE 256
 
 char commands[COMMAND_SIZE];
 byte serial_count;
@@ -106,7 +113,8 @@ if (PEN==1){
   init_process_string();
   init_steppers();
   process_string("G90", 3); //Absolute Position
-  Serial.println("GCode Parser: v0.3");
+  Serial.println("GCode Parser: v0.6");
+  Serial.println("Grbl 1.0");
   Serial.println("start");
 
   laser.run(0);

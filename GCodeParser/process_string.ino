@@ -345,6 +345,10 @@ void ParseGCodeInstruction( char * instruction, byte & index , byte size )
 
         feedrate_micros = calculate_feedrate_delay_circle(feedrate , length);
         dda_circle( feedrate_micros, cx, cy, Command == 3 );
+       
+        //JCW delay as it seems the wireless server overflows...
+        //delay(10);
+        
       }
       break;
 
